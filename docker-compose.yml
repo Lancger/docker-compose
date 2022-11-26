@@ -4,6 +4,7 @@ services:
   rmqnamesrv:
     image: apache/rocketmq:4.9.4
     container_name: rmqnamesrv
+    restart: always
     ports:
       - 9876:9876
     volumes:
@@ -20,6 +21,7 @@ services:
   rmqbroker:
     image: apache/rocketmq:4.9.4
     container_name: rmqbroker
+    restart: always
     ports:
       - 10909:10909
       - 10911:10911
@@ -49,6 +51,7 @@ services:
   rmqconsole:
     image: styletang/rocketmq-console-ng
     container_name: rmqconsole
+    restart: always
     ports:
       - 8080:8080
     environment:
