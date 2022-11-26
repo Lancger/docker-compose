@@ -14,9 +14,9 @@ docker-compose up -d
 
 ```bash
 #需要修改权限，不然rmqbroker启动失败，异常code为253
-chown -R 777 /data0/rocketmq
+chown -R 777 /data0/rocketmq-docker
 #或者
-chown -R 3000:3000 /data0/rocketmq
+chown -R 3000:3000 /data0/rocketmq-docker
 
 #再次启动服务就能成功了
 docker-compose up -d
