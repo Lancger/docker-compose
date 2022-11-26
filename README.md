@@ -1,6 +1,8 @@
 # 一、启动服务
 
 ```bash
+git clone https://github.com/Lancger/rocketmq-docker.git
+
 docker-compose up -d
 ```
 
