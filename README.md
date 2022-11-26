@@ -49,7 +49,13 @@ f0fdab3c84f3   apache/rocketmq:4.9.4           "sh mqnamesrv"           2 minute
 # 二、基于官方dashboard构建
 
 ```bash
+git clone https://github.com/apache/rocketmq-docker.git
+cd rocketmq-docker/image-build
+sh build-image-dashboard.sh 1.0.0 centos
+```
 
+```bash
+docker-compose -f docker-compose-dashboard.yml up -d
 ```
 
 基于官网仓库 https://github.com/apache/rocketmq-docker 同步构建多版本支持 
