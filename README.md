@@ -50,6 +50,8 @@ f0fdab3c84f3   apache/rocketmq:4.9.4           "sh mqnamesrv"           2 minute
 
 https://github.com/apache/rocketmq-dashboard
 
+注意使用官方的dashboard，默认不会展示系统的topic，需要在Topic菜单栏下方勾选SYSTEM系统Topic
+
 ```bash
 cd /data0/rocketmq-docker
 docker-compose -f docker-compose-dashboard.yml up -d
