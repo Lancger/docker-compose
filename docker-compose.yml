@@ -26,7 +26,7 @@ services:
     volumes:
       - $PWD/broker/logs:/home/rocketmq/logs
       - $PWD/broker/store:/home/rocketmq/store
-      - $PWD/broker/brokerconf/broker.conf:/etc/rocketmq/broker.conf
+      - $PWD/broker/broker.conf:/etc/rocketmq/broker.conf
     environment:
         JAVA_OPT_EXT: "-Duser.home=/home/rocketmq -Xms512M -Xmx512M -Xmn128m"
     command: 
