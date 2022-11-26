@@ -46,15 +46,16 @@ b89d017b8363   styletang/rocketmq-console-ng   "sh -c 'java $JAVA_O…"   2 minu
 f0fdab3c84f3   apache/rocketmq:4.9.4           "sh mqnamesrv"           2 minutes ago   Up 2 minutes    10909/tcp, 0.0.0.0:9876->9876/tcp, :::9876->9876/tcp, 10911-10912/tcp       
 ```
 
-# 二、基于官方dashboard
+# 二、使用官方dashboard
+
+https://github.com/apache/rocketmq-dashboard
 
 ```bash
+cd /data0/rocketmq-docker
 docker-compose -f docker-compose-dashboard.yml up -d
 chown -R 3000:3000 /data0/rocketmq-docker
 docker-compose -f docker-compose-dashboard.yml up -d
 ```
-
-https://github.com/apache/rocketmq-dashboard
 
 基于官网仓库 https://github.com/apache/rocketmq-docker 同步构建多版本支持 
 
