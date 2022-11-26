@@ -38,6 +38,14 @@ chown -R 3000:3000 /data0/rocketmq-docker
 docker-compose up -d
 ```
 
+```bash
+root># docker ps -a
+CONTAINER ID   IMAGE                           COMMAND                  CREATED         STATUS          PORTS                                                                                                               NAMES
+d71eec72d6f9   apache/rocketmq:4.9.4           "sh mqbroker -c /etc…"   2 minutes ago   Up 43 seconds   0.0.0.0:10909->10909/tcp, :::10909->10909/tcp, 9876/tcp, 10912/tcp, 0.0.0.0:10911->10911/tcp, :::10911->10911/tcp   rmqbroker
+b89d017b8363   styletang/rocketmq-console-ng   "sh -c 'java $JAVA_O…"   2 minutes ago   Up 2 minutes    0.0.0.0:8080->8080/tcp, :::8080->8080/tcp                                                                           rmqconsole
+f0fdab3c84f3   apache/rocketmq:4.9.4           "sh mqnamesrv"           2 minutes ago   Up 2 minutes    10909/tcp, 0.0.0.0:9876->9876/tcp, :::9876->9876/tcp, 10911-10912/tcp       
+```
+
 基于官网仓库 https://github.com/apache/rocketmq-docker 同步构建多版本支持 
 
 # 参考资料：
