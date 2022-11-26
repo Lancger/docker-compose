@@ -6,7 +6,7 @@
 git clone https://github.com/Lancger/rocketmq-docker.git
 ```
 
-2、修改对应 `rocketmq-docker/broker/conf/broker.conf` 配置文件中对应的IP信息
+2、修改对应 `rocketmq-docker/broker/conf/broker.conf` 配置文件中对应的`brokerIP1`信息
 
 ```bash
 cd /data0/rocketmq-docker
