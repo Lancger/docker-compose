@@ -1,0 +1,82 @@
+version: '3.5'
+
+services:
+  mysql:
+    hostname: mysql
+    image: mysql:5.7.26
+    container_name: mysql #指定容器名称，如果不设置此参数，则由系统自动生成
+    restart: always #设置容器自启模式
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci #设置utf8字符集
+    environment:
+      - TZ=Asia/Shanghai #设置容器时区与宿主机保持一致
+      - MYSQL_ROOT_PASSWORD='123456' #等同于 -e MYSQL_ROOT_PASSWORD 指定root的登录密码
+      - MYSQL_ALLOW_EMPTY_PASSWORD='no'
+      - MYSQL_DATABASE='docker' #这里这个指令compose启动成功后会自动创建名为docker的数据库
+      - MYSQL_USER='docker' #此处就是相当于 mysql create user，创建了数据库的登录用户
+      - MYSQL_PASSWORD='654321' #docker这个用户的数据库密码
+    volumes:
+       - /etc/localtime:/etc/localtime:ro #设置容器时区与宿主机保持一致
+       - $PWD/mysql/data:/var/lib/mysql/data #映射数据库保存目录到宿主机，防止数据丢失
+       - $PWD/mysql/my.cnf:/etc/mysql/my.cnf #映射数据库配置文件
+    ports:
+        - "3306:3306"
+    privileged: true
+  
+  redis:  
+    hostname: redis
+    image: redis:5.0.4
+    container_name: redis
+    restart: always
+    command: redis-server /etc/redis.conf #启动redis命令
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /etc/localtime:/etc/localtime:ro #设置容器时区与宿主机保持一致
+      - $PWD/redis/data:/data
+      - $PWD/redis/redis.conf:/etc/redis.conf
+    ports:
+        - "6379:6379"
+    privileged: true
+
+  zoo1:
+    image: zookeeper
+    restart: always
+    container_name: zoo1
+    ports:
+        - "2181:2181"
+    privileged: true
+
+  minio:
+    image: minio/minio
+    restart: always
+    container_name: minio
+    ports:
+      - 9000:9000 #api 端口
+      - 9001:9001 #控制台端口
+    environment:
+      - MINIO_ACCESS_KEY=admin    #管理后台用户名
+      - MINIO_SECRET_KEY=admin123 #管理后台密码，最小8个字符
+    volumes:
+      - /etc/localtime:/etc/localtime:ro    #设置容器时区与宿主机保持一致
+      - $PWD/minio/data:/data               #映射当前目录下的data目录至容器内/data目录
+      - $PWD/minio/config:/root/.minio/     #映射配置目录
+    command: server --console-address ':9001' /data  #指定容器中的目录 /data
+    privileged: true
+
+  rabbitmq:
+    image: rabbitmq:management
+    restart: always
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    volumes:
+      - $PWD/rabbitmq/data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
