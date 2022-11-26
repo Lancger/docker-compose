@@ -1,5 +1,12 @@
 # 一、启动服务
 
+分配权限(最重要的一步)
+为所有目录包括子目录分配读写权限 没有写权限无法存储 会报错无法启动
+
+```bash
+chmod -R 777 /docker/rocketmq
+```
+
 ```bash
 git clone https://github.com/Lancger/rocketmq-docker.git
 
