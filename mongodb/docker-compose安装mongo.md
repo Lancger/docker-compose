@@ -9,7 +9,7 @@ mkdir -p /data0/mongo/{data,conf,init}
 # 二、创建初始化用户脚本
 
 ```bash
-[root@mongo]# cat /root/tools/mongo/init/init.sh
+[root@mongo]# cat /data0/mongo/init/init.sh
 #!/usr/bin/env bash
 echo "Creating mongo users..."
 
