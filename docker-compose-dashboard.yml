@@ -48,9 +48,9 @@ services:
         aliases:
           - rmqbroker
 
-  rmqconsole:
-    image: apache/rocketmq-dashboard:1.0.0-centos
-    container_name: rmqconsole
+  rocketmq-dashboard:
+    image: apacherocketmq/rocketmq-dashboard:latest
+    container_name: rocketmq-dashboard
     restart: always
     ports:
       - 8080:8080
@@ -61,7 +61,7 @@ services:
     networks:
       rmq:
         aliases:
-          - rmqconsole
+          - rocketmq-dashboard
 
 networks:
   rmq:
