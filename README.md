@@ -12,6 +12,7 @@ chmod -R 777 /data0/rocketmq-docker
 ```
 
 ```bash
+cd /data0/rocketmq-docker
 docker-compose up -d
 ```
 
