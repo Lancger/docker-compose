@@ -27,6 +27,7 @@ echo "Mongo users created."
 方式二
 
 ```bash
+[root@mongo]# cat /data0/mongo/init/init.sh
 #!/usr/bin/env bash
 echo "Creating mongo users..."
 
@@ -35,6 +36,7 @@ mongo admin --host localhost -u root -p 123456 --eval "db.createUser({user: 'adm
 mongo admin -u root -p 123456 << EOF
 use zonedb
 db.createUser({user: 'zone', pwd: 'zonePass', roles:[{role:'readWrite',db:'zonedb'}]})
+db.createCollection("logs", { autoIndexId : true })
 EOF
 
 echo "Mongo users create..."
@@ -83,7 +85,6 @@ services:
       - "27017:27017"
     environment:
       TZ: Asia/Shanghai
-      MONGO_INITDB_DATABASE: docker #指定初始数据库
       #在这里输入 MongoDB 的 root 用户与密码，如果使用了此项，则不需要 --auth 参数
       MONGO_INITDB_ROOT_USERNAME: root   #表示 admin 数据库用户名
       MONGO_INITDB_ROOT_PASSWORD: 123456 #表示 admin 数据库密码
@@ -119,6 +120,8 @@ networks:
     driver: bridge
 EOF
 ```
+
+![](../images/image-20221127221044498.png)
 
 2、认证方式二
 
@@ -202,6 +205,7 @@ docker-compose up -d
 # 五、注意事项
 
 初始化脚本只有再data数据目录为空时会执行，若未执行初始化脚本，可删除目录重新创建后执行
+
 
 # 参考资料：
 
