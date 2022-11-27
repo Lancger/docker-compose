@@ -6,8 +6,7 @@ mkdir -p /data0/mongo/{data,conf,init}
 
 # 二、创建初始化用户脚本
 
-表示MongoDB的初始root用户的密码为`123456`，然后创建一个`admin`用户，密码为`admin123`，`admin`这个DB的权限`userAdminAnyDatabase`是权限，然后还创建一个`docker`的DB，权限为`readWrite`
-
+方式一
 ```bash
 [root@mongo]# cat /data0/mongo/init/init.sh
 #!/usr/bin/env bash
@@ -23,13 +22,55 @@ EOF
 echo "Mongo users created."
 ```
 
-# 三、docker-compose配置文件
+    表示MongoDB的初始root用户的密码为`123456`，然后创建一个`admin`用户，密码为`admin123`，`admin`这个DB的权限`userAdminAnyDatabase`是权限，然后还创建一个`docker`的DB，权限为`readWrite`
 
-1、不带认证方式
+方式二
 
 ```bash
-cat <<'EOF'>docker-compose.yml 
-version: '3'
+#!/usr/bin/env bash
+echo "Creating mongo users..."
+
+mongo admin --host localhost -u root -p 123456 --eval "db.createUser({user: 'admin', pwd: 'AdminPassWord', roles: [{role: 'userAdminAnyDatabase', db: 'admin'}]});"
+
+mongo admin -u root -p 123456 << EOF
+use zonedb
+db.createUser({user: 'zone', pwd: 'zonePass', roles:[{role:'readWrite',db:'zonedb'}]})
+EOF
+
+echo "Mongo users create..."
+```
+
+那么在这里解释一下创建的过程：
+
+1.  创建一个 admin 数据库，其参数为：
+    
+    -   用户：admin
+        
+    -   密码：AdminPassWord
+        
+    -   role：userAdminAnyDatabase
+        
+2.  创建一个 zonedb 数据库，其参数为：
+    
+    -   用户：zone
+        
+    -   密码：zonePass
+        
+    -   role：readWrite
+
+https://juejin.cn/post/6844903653841567758    基于 Docker 中的 MongoDB 授权使用
+
+# 三、docker-compose配置文件
+
+environment 选项分别表示：（需要说明的是：这是官方支持的）
+
+1.  MONGO_INITDB_ROOT_USERNAME 表示 admin 数据库用户名
+2.  MONGO_INITDB_ROOT_PASSWORD 表示 admin 数据库密码
+
+```bash
+cat <<'EOF'>docker-compose.yml
+version: '3.5'
+
 services:
   mongo:
     image: mongo:4.4.6
@@ -42,9 +83,10 @@ services:
       - "27017:27017"
     environment:
       TZ: Asia/Shanghai
-      MONGO_INITDB_DATABASE: docker
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: 123456
+      MONGO_INITDB_DATABASE: docker #指定初始数据库
+      #在这里输入 MongoDB 的 root 用户与密码，如果使用了此项，则不需要 --auth 参数
+      MONGO_INITDB_ROOT_USERNAME: root   #表示 admin 数据库用户名
+      MONGO_INITDB_ROOT_PASSWORD: 123456 #表示 admin 数据库密码
     volumes:
       - /etc/localtime:/etc/localtime:ro #设置容器时区与宿主机保持一致
       - /data0/mongo/data:/data/db
@@ -78,9 +120,9 @@ networks:
 EOF
 ```
 
-2、带认证方式
+2、认证方式二
 
-方式二、初始化`/data0/mongo/init/setup.js`
+方式二、初始化  `/data0/mongo/init/setup.js`
 
 ```bash
 cat <<'EOF'>/data0/mongo/init/setup.js
@@ -103,7 +145,8 @@ EOF
 
 ```bash
 cat <<'EOF'>docker-compose.yml 
-version: '3'
+version: '3.5'
+
 services:
   mongo:
     image: mongo:4.4.6
@@ -160,7 +203,6 @@ docker-compose up -d
 
 初始化脚本只有再data数据目录为空时会执行，若未执行初始化脚本，可删除目录重新创建后执行
 
-
 # 参考资料：
 
 https://www.cnblogs.com/inclme/p/15829489.html  docker-compose安装mongo
@@ -168,3 +210,11 @@ https://www.cnblogs.com/inclme/p/15829489.html  docker-compose安装mongo
 https://www.jianshu.com/p/e48f0ec7a322  docker-compose 安装mongo
 
 https://www.cnblogs.com/mxnote/articles/16899560.html  使用Docker-Compose安装MongoDB
+
+https://blog.csdn.net/u014044812/article/details/78666297  Docker系列教程02-MongoDB默认开启鉴权
+
+```bash
+当你加入环境变量MONGO_INITDB_ROOT_USERNAME和MONGO_INITDB_ROOT_PASSWORD（缺一不可）后mongodb自动开启权限验证，这在mongo官方镜像文件的docker-entrypoint.sh脚本中可看到  https://github.com/docker-library/mongo/blob/00a8519463e776e797c227681a595986d8f9dbe1/3.0/docker-entrypoint.sh
+```
+
+https://juejin.cn/post/6844903653841567758  # 基于 Docker 中的 MongoDB 授权使用
