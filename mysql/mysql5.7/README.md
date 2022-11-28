@@ -106,8 +106,9 @@ EOF
 # 四、实例化目录和配置文件
 
 ```bash
-[root@centos7 mysql]# chmod +x init-mysql.sh docker-compose.yaml  #加执行权限
-[root@centos7 mysql]# ./init-mysql.sh
+chmod +x init-mysql.sh docker-compose.yaml  #加执行权限
+
+./init-mysql.sh
 
 [root@centos7 mysql]# tree ./  #查看目结构
 ./
@@ -129,7 +130,8 @@ docker-compose up -d
 # 六、登陆mysql
 
 ```mysql
-[root@centos7 mysql57]# docker exec -it mysql57 mysql -uroot -padmin123456
+docker exec -it mysql57 mysql -uroot -padmin123456
+
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 3
