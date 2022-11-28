@@ -1,4 +1,4 @@
-# docker-compose 安装 mysql:5.7.31
+# docker-compose安装mysql:5.7.31
 
 ```bash
 #安装docker-compose
