@@ -206,7 +206,6 @@ docker-compose up -d
 
 初始化脚本只有再data数据目录为空时会执行，若未执行初始化脚本，可删除目录重新创建后执行
 
-
 # 参考资料：
 
 https://www.cnblogs.com/inclme/p/15829489.html  docker-compose安装mongo
