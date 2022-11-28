@@ -1,5 +1,13 @@
 # docker-compose 安装 mysql:5.7.31
 
+```bash
+#安装docker-compose
+export Version="v2.13.0"
+curl -L "https://github.com/docker/compose/releases/download/${Version}/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+```
+
 # 一、新建一个启动服务的目录
 
 ```bash
@@ -21,16 +29,18 @@ services:
     image: mysql:5.7.31
     restart: always
     ports:
-      - 3307:3306
+      - 3306:3306
     privileged: true
     volumes:
       - $PWD/mysql57/log:/var/log/mysql 
       - $PWD/mysql57/conf/my.cnf:/etc/mysql/my.cnf
       - $PWD/mysql57/data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: "admin123456"
       MYSQL_USER: 'www'
-      MYSQL_PASS: 'www123456'
+      MYSQL_PASSWORD: 'www123456'
+      MYSQL_DATABASE: 'example'
+      MYSQL_ROOT_PASSWORD: "admin123456"
+      TZ: "Asia/Shanghai"
     command: [
         '--character-set-server=utf8mb4',
         '--collation-server=utf8mb4_general_ci',
@@ -72,15 +82,23 @@ default-time_zone = '+8:00'
 
 # 更改字符集 如果想Mysql在后续的操作中文不出现乱码,则需要修改配置文件内容
 symbolic-links=0
+max_allowed_packet=64M
+sql_mode ='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+
+# 服务端默认字符集
 character-set-server=utf8mb4
+# 使用服务端字符集
 character-set-client-handshake=FALSE
-collation-server=utf8_unicode_ci
-init_connect='SET NAMES utf8'
+# 连接层默认字符集
+collation-server=utf8mb4_unicode_ci
+init_connect='SET NAMES utf8mb4'
 
 [client]
+# 客户端来源数据的默认字符集
 default-character-set=utf8mb4
 
 [mysql]
+# 数据库默认字符集
 default-character-set=utf8mb4
 EOF
 ```
@@ -88,12 +106,12 @@ EOF
 # 四、实例化目录和配置文件
 
 ```bash
-[root@centos7 mysql]# chmod +x init-mysql.sh docker-compose.yml  #加执行权限
+[root@centos7 mysql]# chmod +x init-mysql.sh docker-compose.yaml  #加执行权限
 [root@centos7 mysql]# ./init-mysql.sh
 
 [root@centos7 mysql]# tree ./  #查看目结构
 ./
-├── docker-compose.yml
+├── docker-compose.yaml
 ├── init-mysql.sh
 └── mysql57
     ├── conf
