@@ -21,7 +21,6 @@ EOF
 
 echo "Mongo users created."
 ```
-
     表示MongoDB的初始root用户的密码为`123456`，然后创建一个`admin`用户，密码为`admin123`，`admin`这个DB的权限`userAdminAnyDatabase`是权限，然后还创建一个`docker`的DB，权限为`readWrite`
 
 方式二
@@ -120,7 +119,6 @@ networks:
     driver: bridge
 EOF
 ```
-
 ![](../images/image-20221127221044498.png)
 
 2、认证方式二
