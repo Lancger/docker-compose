@@ -1,0 +1,234 @@
+version: '3'
+services:
+  rocketmq-namesv1:
+    image: apache/rocketmq:4.8.0
+    container_name: rocketmq-namesv1
+    restart: always
+    ports:
+      - 9876:9876
+    volumes:
+      - /data0/rocketmq/logs/namesv1:/home/rocketmq/logs
+    environment:
+      JAVA_OPT_EXT: -server -Xms2048M -Xmx2048M -Xmn128m
+    command: sh mqnamesrv
+    networks:
+      rocketmq:
+        aliases:
+          - rocketmq-namesv1
+
+  rocketmq-namesv2:
+    image: apache/rocketmq:4.8.0
+    container_name: rocketmq-namesv2
+    restart: always
+    ports:
+      - 9877:9876
+    volumes:
+      - /data0/rocketmq/logs/namesv2:/home/rocketmq/logs
+    environment:
+      JAVA_OPT_EXT: -server -Xms2048M -Xmx2048M -Xmn128m
+    command: sh mqnamesrv
+    networks:
+      rocketmq:
+        aliases:
+          - rocketmq-namesv2
+
+  broker-a:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-a
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-a:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-a/broker-a.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-a
+
+  broker-a-s:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-a-s
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 11909:10909
+      - 11911:11911
+      - 11912:10912    
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-a-s:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-a-s/broker-a-s.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-a-s
+
+  broker-b:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-b
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 12909:10909
+      - 12911:12911
+      - 12912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-b:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-b/broker-b.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-b
+
+  broker-b-s:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-b-s
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 13909:10909
+      - 13911:13911
+      - 13912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-b-s:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-b-s/broker-b-s.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-b-s
+
+  broker-c:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-c
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 14909:10909
+      - 14911:14911
+      - 14912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-c:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-c/broker-c.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-c
+
+  broker-c-s:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-c-s
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 15909:10909
+      - 15911:15911
+      - 15912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-c-s:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-c-s/broker-c-s.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-c-s
+
+  broker-d:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-d
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 16909:10909
+      - 16911:16911
+      - 16912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-d:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-d/broker-d.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-d
+
+  broker-d-s:
+    image: apache/rocketmq:4.8.0
+    container_name: broker-d-s
+    links:
+      - rocketmq-namesv1:rocketmq-namesv1
+      - rocketmq-namesv2:rocketmq-namesv2
+    ports:
+      - 17909:10909
+      - 17911:17911
+      - 17912:10912
+    environment:
+      TZ: Asia/Shanghai
+      NAMESRV_ADDR: "rocketmq-namesv1:9876"
+      JAVA_OPT_EXT: "-server -Xms2048M -Xmx2048M -Xmn128m"
+    volumes:
+      - /data0/rocketmq/logs/broker-d-s:/home/rocketmq/logs
+      - /data0/rocketmq/config/broker-d-s/broker-d-s.conf:/home/rocketmq/rocketmq-4.8.0/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/rocketmq-4.8.0/conf/broker.conf autoCreateTopicEnable=true &
+    networks:
+      rocketmq:
+        aliases:
+          - broker-d-s
+
+  rocketmq-console:
+    image: styletang/rocketmq-console-ng
+    container_name: rocketmq-console
+    ports:
+      - 8090:8080
+    environment:
+      JAVA_OPTS: -Drocketmq.namesrv.addr=rocketmq-namesv1:9876;rocketmq-namesv2:9877 -Dcom.rocketmq.sendMessageWithVIPChannel=false
+    networks:
+      rocketmq:
+        aliases:
+          - rocketmq-console
+
+networks:
+  rocketmq:
+    name: rocketmq
+    driver: bridge
